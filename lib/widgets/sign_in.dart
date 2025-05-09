@@ -5,7 +5,7 @@ import 'package:knock_collector_mobile_application/widgets/input_widgets/passwor
 
 import '../pages/practice_page.dart';
 import 'input_widgets/email_widget.dart';
-
+/*
 class SignIn extends StatelessWidget{
 
   final GlobalKey<FormState> _formKey;
@@ -91,5 +91,5 @@ class SignIn extends StatelessWidget{
     );
   }
 
-}
+}*/
 

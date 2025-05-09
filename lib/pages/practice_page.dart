@@ -55,7 +55,7 @@ class _PracticePage extends State<PracticePage> {
 
   void _loadAgentAndPractice() async {
     try{
-      agent = await agentService.getAgentData();
+      agent = await agentService.getAgentData("");//Inserire email
       final List<Practice> loadedPractices = await practiceService.getAgentPractice(agent.agentId);
       if(loadedPractices.isNotEmpty){
         debugPrint("pratiche caricate");

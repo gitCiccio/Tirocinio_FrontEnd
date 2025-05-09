@@ -55,4 +55,8 @@ class PracticeService{
       print('Errore nella richiesta HTTP: $e');
     }
   }
+
+  //Modifica pratica/Eliminazione pratica per l'admin
+  //Per l'agente invece gestire meglio la presa delle pratiche
+  //Ricorda che devi prendere le pratiche e mostrare un array di 10 a pagina
 }
