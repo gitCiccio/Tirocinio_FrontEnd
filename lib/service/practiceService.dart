@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:knock_collector_mobile_application/model/installment.dart';
 import 'package:knock_collector_mobile_application/model/practice.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,10 +25,10 @@ class PracticeService{
   double calcolateCredit(Practice practice){
     double amount = 0.0;
     for(var installment in practice.installment){
-      amount+=installment.amount;
+      amount+=installment!.amount;
     }
     for(var recovery in practice.recovery){
-      amount-=recovery.amount;
+      amount-=recovery!.amount;
     }
 
     return amount;
@@ -56,7 +55,4 @@ class PracticeService{
     }
   }
 
-  //Modifica pratica/Eliminazione pratica per l'admin
-  //Per l'agente invece gestire meglio la presa delle pratiche
-  //Ricorda che devi prendere le pratiche e mostrare un array di 10 a pagina
 }

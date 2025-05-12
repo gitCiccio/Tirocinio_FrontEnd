@@ -9,8 +9,9 @@ class RegistrationForm extends StatefulWidget {
   final VoidCallback? onCancel;
   final String? email;
   final bool fieldsAreLocked;
+  final bool changePassword;
 
-  const RegistrationForm({this.onCancel, super.key, this.email, this.fieldsAreLocked = false});
+  const RegistrationForm({this.onCancel, super.key, this.email, this.fieldsAreLocked = false, this.changePassword = false});
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -178,58 +179,72 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               Padding(
-              padding: const EdgeInsets.only(top: 50),
-              child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF0743C2),
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          if(_registrationService.doRegistration(_emailController.text, _passwordController.text) != "Registration successful"){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Registration completed'),
-                              backgroundColor: Colors.green,
-                              ),
-                            );
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SecondLoginPage()));
-                            });
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Registration error'),
-                              backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      child: Text('Register'),
-                  ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 50),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF0743C2),
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  onPressed: () {
-                    if (widget.onCancel != null) {
-                      widget.onCancel!();
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      final email = _emailController.text;
+                      final password = _passwordController.text;
+
+                      if (!widget.changePassword) {
+                        final result = await _registrationService.doRegistration(email, password);
+                        if (result == "Registration successful") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Registration completed'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => SecondLoginPage()),
+                            );
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Registration error'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      } else {
+                        final result = await _registrationService.changePassword(email, password);
+                        if (result.toString() == "Password changed") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Password changed'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => SecondLoginPage()),
+                            );
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error changing password'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
                     }
                   },
-                  child: Text('Cancel'),
+                  child: Text(widget.changePassword ? 'Change password' : 'Register'),
                 ),
-              )
+              ),
+
             ],
           ),
         ),

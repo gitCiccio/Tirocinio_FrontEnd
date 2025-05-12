@@ -8,7 +8,10 @@ import '../model/practice.dart';
 import '../service/practiceService.dart';
 
 class PracticePage extends StatefulWidget {
-  const PracticePage({super.key});
+
+  final String email;
+
+  const PracticePage(this.email, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -55,7 +58,7 @@ class _PracticePage extends State<PracticePage> {
 
   void _loadAgentAndPractice() async {
     try{
-      agent = await agentService.getAgentData("");//Inserire email
+      agent = await agentService.getAgentData(widget.email);//Inserire email
       final List<Practice> loadedPractices = await practiceService.getAgentPractice(agent.agentId);
       if(loadedPractices.isNotEmpty){
         debugPrint("pratiche caricate");
@@ -95,7 +98,14 @@ class _PracticePage extends State<PracticePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF0743C2),
+        shadowColor: Colors.black,
+        elevation: 10,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
         actions: <Widget>[
           IconButton(
               onPressed: () {
@@ -109,7 +119,7 @@ class _PracticePage extends State<PracticePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: const Color(0xFF0743C2)),
               child: const Text(
                 'Menù',
                 style: TextStyle(
@@ -259,7 +269,7 @@ class _PracticePage extends State<PracticePage> {
           /// 🔴 Lista pratiche
           Container(
             alignment: Alignment.center,
-            color: Colors.red,
+            color: Colors.white,
             width: double.infinity,
             height: 300,
             margin: EdgeInsets.zero,
@@ -278,15 +288,29 @@ class _PracticePage extends State<PracticePage> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      color: Colors.white,
                       width: double.infinity,
-                      height: 20,
-                      margin: EdgeInsets.only(bottom: 8),
+                      margin: EdgeInsets.only(bottom: 12, left: 16, right: 16),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
                       child: Text(
                         'Pratica: ${entry.key + 1}',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                        ),
                       ),
-                    ),
+                    )
                   ),
               ],
             )
@@ -298,18 +322,32 @@ class _PracticePage extends State<PracticePage> {
               },
               child: Container(
                 alignment: Alignment.center,
-                color: Colors.white,
+                height: 80,
                 width: double.infinity,
-                height: 20,
-                margin: EdgeInsets.only(bottom: 8),
+                margin: EdgeInsets.only(bottom: 6, left: 8, right: 8),
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 2,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
                 child: Text(
                   'Pratica selezionata: ${filteredPractices.indexOf(currentPractice!) + 1}',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[800],
+                  ),
                 ),
               ),
             ),
           ),
-
           Container(
             width: double.infinity,
             height: 30,
@@ -369,7 +407,7 @@ class _PracticePage extends State<PracticePage> {
           Container(
             width: double.infinity,
             height: 400, // aumentato l'altezza per stare più comodi
-            color: Colors.orange,
+            color: Colors.white,
             margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(16),
             child: currentPractice != null
@@ -444,7 +482,7 @@ class _PracticePage extends State<PracticePage> {
                                   style: TextStyle(fontSize: 16, color: Colors.black),
                                   children: [
                                     TextSpan(
-                                      text: '${_formatDate(note.dateNote)} - ',
+                                      text: '${_formatDate(note!.dateNote)} - ',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     TextSpan(
@@ -480,34 +518,59 @@ class _PracticePage extends State<PracticePage> {
             child: TextField(
               controller: noteController, // 👈 AGGIUNTO
               decoration: InputDecoration(
-                hintText: 'Inserisci una nota',
+                hintText: 'Write a note',
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (noteController.text.trim().isNotEmpty) {
-                setState(() {
-                  currentPractice!.notes.add(
-                    Note(
-                      text: noteController.text.trim(), noteId: '', dateNote: DateTime.now()
-                      // altri campi se servono
-                    ),
-                  );
-                  noteController.clear(); // Pulisco il campo dopo aver aggiunto
-                });
-              }
-            },
-            child: Text('Aggiungi Nota'),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF0743C2),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () {
+                if (noteController.text.trim().isNotEmpty) {
+                  setState(() {
+                    currentPractice!.notes.add(
+                      Note(
+                          text: noteController.text.trim(), noteId: '', dateNote: DateTime.now()
+                        // altri campi se servono
+                      ),
+                    );
+                    noteController.clear(); // Pulisco il campo dopo aver aggiunto
+                  });
+                }
+              },
+              child: const Text(
+                'Add note',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
 
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10),
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF0743C2),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
               onPressed: () {
                 practiceService.sendPractice(currentPractice!);
               },
-              child: Text('Salva'),
+              child: const Text(
+                'Save',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

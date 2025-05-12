@@ -10,10 +10,10 @@ class Practice{
   final String practice_id;
   final Debtor debtor;
   final double creditToRecover;
-  final List<Installment> installment;
-  final List<PromiseOfPayment> promiseOfPayment;
-  final List<Recovery> recovery;
-  final List<Note> notes;
+  final List<Installment?> installment;
+  final List<PromiseOfPayment?> promiseOfPayment;
+  final List<Recovery?> recovery;
+  final List<Note?> notes;
 
   Practice({required this.practice_id, required this.debtor, required this.creditToRecover, required this.installment, required this.promiseOfPayment, required this.recovery, required this.notes});
 
@@ -42,10 +42,10 @@ class Practice{
       'practice_id': practice_id,
       'debtor': debtor.toJson(),
       'creditToRecover': creditToRecover,
-      'installment': installment.map((installment) => installment.toJson()).toList(),
-      'promiseOfPayment': promiseOfPayment.map((promise) => promise.toJson()).toList(),
-      'recovery': recovery.map((recovery) => recovery.toJson()).toList(),
-      'notes': notes.map((note) => note.toJson()).toList()
+      'installment': installment.map((installment) => installment?.toJson()).toList(),
+      'promiseOfPayment': promiseOfPayment.map((promise) => promise?.toJson()).toList(),
+      'recovery': recovery.map((recovery) => recovery?.toJson()).toList(),
+      'notes': notes.map((note) => note?.toJson()).toList()
     };
   }
 

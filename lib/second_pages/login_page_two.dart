@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:knock_collector_mobile_application/pages/admin_page.dart';
 import 'package:knock_collector_mobile_application/second_pages/popup_dialog.dart';
 import 'package:knock_collector_mobile_application/service/login_service.dart';
-import 'package:uuid/uuid.dart';
 
 import '../pages/practice_page.dart';
 
@@ -141,9 +140,6 @@ class _SecondLoginPageState extends State<SecondLoginPage> {
                     await Future.delayed(Duration(seconds: 1));
                     _showOtpDialog(context);
                   }
-
-                  //Se l'otp è accettato allora passa alla pagina di registrazione inserendo già la mail
-                  //Invia dopo l'invio dei dati ritorni alla pagina di login
                 },
                 child: const Text(
                   'Forgot password?',
@@ -193,7 +189,7 @@ class _SecondLoginPageState extends State<SecondLoginPage> {
                         Future.delayed(Duration(seconds: 6), () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (_) => PracticePage()),
+                            MaterialPageRoute(builder: (_) => PracticePage(_emailController.text)),
                           );
                         });
                       }else if(agent.role == "ADMIN"){

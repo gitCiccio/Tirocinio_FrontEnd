@@ -8,18 +8,16 @@ class Debtor {
   final String id;
   final String email;
   final String phoneNumber;
-  final String password;
   final PersonalData personalData;
   final List<Address> addresses;
 
-  Debtor({required this.id, required this.email, required this.phoneNumber,required this.password, required this.personalData, required this.addresses});
+  Debtor({required this.id, required this.email, required this.phoneNumber, required this.personalData, required this.addresses});
 
   factory Debtor.fromJson(Map<String, dynamic> json) {
     return Debtor(
       id: json['id'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      password: json['password'],
       personalData: PersonalData.fromJson(json['personalData']),
       addresses: (json['addresses'] as List).map((addressJson) => Address.fromJson(addressJson)).toList(),
     );
@@ -30,7 +28,6 @@ class Debtor {
       'id': id,
       'email': email,
       'phoneNumber': phoneNumber,
-      'password': password,
       'personalData': personalData.toJson(),
       'addresses': addresses.map((address) => address.toJson()).toList()
     };

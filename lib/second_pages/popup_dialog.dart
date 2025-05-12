@@ -51,6 +51,7 @@ class _OtpDialogState extends State<OtpDialog>{
               builder: (_) => RegistrationForm(
                 email: agentData.email,
                 fieldsAreLocked: true,
+                changePassword: true,
               )
           ),
         );
